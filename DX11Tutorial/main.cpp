@@ -34,15 +34,20 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	// register the window class
 	RegisterClassEx(&wc);
 
+	// rectangle for AdjustWindowRect that deals with distortions between client and visible window
+	RECT wr{ 0,0, 500, 400 }; // set the size, but not the position
+	AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, FALSE); // adjust the size.
+
+
 	// create the window and use the result as the handle
-	hWnd = CreateWindowEx(NULL,		// The extended window style of the window being created
+	hWnd = CreateWindowEx(NULL,		// The extended window style of the window being created - unneeded extension of the 4th param (window style)
 						  "WindowClass1",		// name of the window class
 						  "Our first Windowed program",		// window title
 						  WS_OVERLAPPEDWINDOW,		// window style
 						  300,		// x pos of window
 						  300,		// y pos of window
-						  500,		// window width
-						  400,		// window height
+						  wr.right - wr.left,		// window width
+						  wr.bottom - wr.top,		// window height
 						  NULL,		// we have no parent window
 						  NULL,		// we aren't using menus
 						  hInstance,		// application handle

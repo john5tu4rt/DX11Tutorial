@@ -59,16 +59,28 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	// enter the main loop:
 
 	// this struct holds Windows event messages
-	MSG msg;
+	MSG msg{ 0 }; // RAIIed
 
-	// wait for the next message in the queue, store the result
-	while (GetMessage(&msg, NULL, 0, 0)) {
+	// Enter the inifinite message loop
+	while (true) { // not using TRUE because I don't think it's necessary to use the windows C defined version in this context as all breaks will leave this loop					
 
-		// translates keystrokes into right format
-		TranslateMessage(&msg);
+		// Check to see if any messages are waiting in the queue
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 
-		// send the message to the WindowProc function
-		DispatchMessage(&msg);
+			// translates keystrokes into right format
+			TranslateMessage(&msg);
+
+			// send the message to the WindowProc function
+			DispatchMessage(&msg);
+
+			// check to see if it's time to quit
+			if (msg.message == WM_QUIT)
+				break;
+		} else {
+			/*
+				Game Code
+			*/
+		}
 	}
 
 	// return this part of WM_QUIT message to Windows
